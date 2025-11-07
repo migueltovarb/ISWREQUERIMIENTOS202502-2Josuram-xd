@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Style Tile • SGEN</title>
+<style>
+  /* =========================
+     FUNDAMENTOS / TOKENS
+  ==========================*/
+  :root{
+    /* Colores base */
+    --brand-red: #D32F2F;     /* Botones de advertencia / cerrar */
+    --brand-blue: #1565C0;    /* Acciones primarias (Guardar/Consultar) */
+    --brand-blue-700:#0D47A1;
+    --brand-red-700:#B71C1C;
+
+    --success: #2E7D32;
+    --warning: #ED6C02;
+    --error:   #C62828;
+    --info:    #0277BD;
+
+    --bg:      #FFFFFF;
+    --bg-alt:  #F7F7F9;
+    --panel:   #FFFFFF;
+    --text:    #111111;
+    --muted:   #6B7280;  /* gris texto secundario */
+    --border:  #DADCE0;
+    --shadow:  0 8px 24px rgba(16,24,40,.08);
+
+    /* Tipografía */
+    --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    --h1: clamp(24px, 3.2vw, 36px);
+    --h2: clamp(20px, 2.6vw, 28px);
+    --lead: 17px;
+    --base: 15px;
+    --small: 13px;
+
+    /* Espaciado y radios */
+    --space-1: .25rem;
+    --space-2: .5rem;
+    --space-3: .75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --radius-sm: .5rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --ring: 0 0 0 3px rgba(21,101,192,.18);
+  }
+
+  /* Reset suave */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:var(--font-sans);
+    font-size:var(--base);
+    color:var(--text);
+    background:linear-gradient(180deg,#fafafb, #f4f6fa 60%, #eef2f7);
+  }
+
+  .container{
+    max-width:1100px;
+    margin-inline:auto;
+    padding:var(--space-8) var(--space-4);
+  }
+
+  .grid{display:grid; gap:var(--space-8)}
+  .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media (max-width:900px){ .grid.cols-2{grid-template-columns:1fr} }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius-xl);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .card-header{
+    padding:var(--space-4) var(--space-6);
+    border-bottom:1px solid var(--border);
+    background:var(--bg);
+    font-size:var(--h2);
+    font-weight:700;
+  }
+  .card-body{padding:var(--space-6)}
+
+  h1{font-size:var(--h1); margin:0 0 var(--space-4)}
+  p.lead{font-size:var(--lead); color:var(--muted); margin:.25rem 0 var(--space-6)}
+
+  /* =========================
+     PALETA
+  ==========================*/
+  .swatches{display:flex; gap:var(--space-4); flex-wrap:wrap}
+  .swatch{
+    width:140px; border:1px solid var(--border); border-radius:var(--radius-lg);
+    overflow:hidden; background:#fff
+  }
+  .swatch .tone{height:64px}
+  .swatch .meta{padding:var(--space-3); font-size:var(--small)}
+  .tone.red{background:var(--brand-red)}
+  .tone.blue{background:var(--brand-blue)}
+  .tone.success{background:var(--success)}
+  .tone.warning{background:var(--warning)}
+  .tone.error{background:var(--error)}
+  .tone.info{background:var(--info)}
+  .tone.gray{background:#E5E7EB}
+  .swatch .hex{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+
+  /* =========================
+     BOTONES
+  ==========================*/
+  .row{display:flex; gap:var(--space-3); flex-wrap:wrap}
+  .btn{
+    --bg: #e5e7eb; --fg:#111; --bg-h:#dfe3e8; --bd:#d0d5dd;
+    appearance:none; border:1px solid var(--bd);
+    background:var(--bg); color:var(--fg);
+    padding: .625rem 1rem; border-radius:999px; font-weight:600; cursor:pointer;
+    transition:.15s ease-in-out; line-height:1; user-select:none;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn:focus-visible{outline:none; box-shadow:var(--ring)}
+
+  .btn.primary{
+    --bg:var(--brand-blue); --bg-h:var(--brand-blue-700);
+    --fg:#fff; --bd:transparent;
+    background:var(--bg); color:var(--fg);
+  }
+  .btn.primary:hover{background:var(--bg-h)}
+  .btn.danger{
+    --bg:var(--brand-red); --bg-h:var(--brand-red-700);
+    --fg:#fff; --bd:transparent;
+    background:var(--bg); color:var(--fg);
+  }
+  .btn.ghost{
+    --bg:transparent; --fg:var(--brand-blue); --bd:var(--brand-blue);
+  }
+  .btn.icon{padding:.5rem .65rem}
+
+  /* Badges y estados */
+  .badge{
+    display:inline-flex; align-items:center; gap:.4rem;
+    font-size:var(--small); font-weight:700;
+    border-radius:999px; padding:.25rem .6rem; border:1px solid var(--border); background:#fff;
+  }
+  .badge.ok{border-color:rgba(46,125,50,.2); color:var(--success); background:rgba(46,125,50,.06)}
+  .badge.fail{border-color:rgba(198,40,40,.2); color:var(--error); background:rgba(198,40,40,.06)}
+
+  /* =========================
+     FORM / CAMPOS
+  ==========================*/
+  .field{display:grid; gap:.35rem; margin-bottom:var(--space-4)}
+  .label{font-weight:600}
+  .input, select{
+    width:100%; border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:.625rem .8rem; background:#fff; color:var(--text);
+  }
+  .input:focus, select:focus{outline:none; box-shadow:var(--ring)}
+
+  /* =========================
+     TABLAS
+  ==========================*/
+  .table{
+    width:100%; border-collapse:separate; border-spacing:0; border:1px solid var(--border);
+    border-radius:var(--radius-lg); overflow:hidden; background:#fff;
+  }
+  .table th, .table td{padding:.75rem .9rem; border-bottom:1px solid var(--border)}
+  .table thead th{background:var(--bg-alt); text-align:left; font-weight:700}
+  .table tr:last-child td{border-bottom:none}
+
+  /* =========================
+     MODAL / NOTIFICACIONES
+  ==========================*/
+  .modal{
+    position:relative; border:1px solid var(--border); border-radius:var(--radius-xl);
+    background:#fff; box-shadow:var(--shadow); max-width:680px; margin-inline:auto;
+  }
+  .modal .title{font-size:var(--h2); font-weight:800; padding:var(--space-6) var(--space-6) var(--space-4)}
+  .modal .content{padding:0 var(--space-6) var(--space-6)}
+  .modal .actions{display:flex; gap:var(--space-3); justify-content:center; padding:var(--space-4) var(--space-6) var(--space-6)}
+  .notice{
+    border-left:4px solid var(--info);
+    background:rgba(2,119,189,.06);
+    padding:.75rem 1rem; border-radius:.5rem; font-size:var(--small);
+  }
+
+  /* Demonstra iconografía ✓ ✗ sin usar emojis extra */
+  .kpi{display:flex; gap:var(--space-3); flex-wrap:wrap}
+  .kpi .pill{
+    border:1px solid var(--border); padding:.5rem .75rem; border-radius:999px; background:#fff; font-size:var(--small)
+  }
+  .muted{color:var(--muted)}
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Style Tile — Sistema SGEN</h1>
+    <p class="lead">Guía visual compacta para mantener consistencia en las pantallas (botones rojos/azules, tablas con bordes finos, modales de confirmación y estados ✓ / ✗).</p>
+
+    <div class="grid cols-2">
+      <!-- Paleta -->
+      <section class="card">
+        <div class="card-header">Paleta de colores</div>
+        <div class="card-body">
+          <div class="swatches">
+            <div class="swatch"><div class="tone blue"></div><div class="meta"><strong>Acción primaria</strong><div class="hex">#1565C0</div></div></div>
+            <div class="swatch"><div class="tone red"></div><div class="meta"><strong>Acción crítica</strong><div class="hex">#D32F2F</div></div></div>
+            <div class="swatch"><div class="tone success"></div><div class="meta"><strong>Éxito</strong><div class="hex">#2E7D32</div></div></div>
+            <div class="swatch"><div class="tone warning"></div><div class="meta"><strong>Advertencia</strong><div class="hex">#ED6C02</div></div></div>
+            <div class="swatch"><div class="tone error"></div><div class="meta"><strong>Error</strong><div class="hex">#C62828</div></div></div>
+            <div class="swatch"><div class="tone info"></div><div class="meta"><strong>Info</strong><div class="hex">#0277BD</div></div></div>
+            <div class="swatch"><div class="tone gray"></div><div class="meta"><strong>Fondo tabla</strong><div class="hex">#E5E7EB</div></div></div>
+          </div>
+          <div class="kpi" style="margin-top:var(--space-4)">
+            <span class="pill">Tipografía: <strong>Inter/Sistema</strong></span>
+            <span class="pill">Borde UI: <strong>#DADCE0</strong></span>
+            <span class="pill">Radio: <strong>16px</strong></span>
+            <span class="pill">Sombra: <strong>suave</strong></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Botones & badges -->
+      <section class="card">
+        <div class="card-header">Botones y estados</div>
+        <div class="card-body">
+          <div class="row">
+            <button class="btn primary">Guardar</button>
+            <button class="btn danger">Cerrar sesión</button>
+            <button class="btn">Secundario</button>
+            <button class="btn ghost">Ver reporte</button>
+          </div>
+          <div class="row" style="margin-top:var(--space-4)">
+            <span class="badge ok">✓ Éxito</span>
+            <span class="badge fail">✗ Error</span>
+            <span class="badge">Pendiente</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Formularios -->
+      <section class="card">
+        <div class="card-header">Campos de formulario</div>
+        <div class="card-body">
+          <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-4)">
+            <div class="field">
+              <label class="label">Materia o Curso</label>
+              <input class="input" placeholder="Ingrese texto..." />
+            </div>
+            <div class="field">
+              <label class="label">Periodo académico</label>
+              <select>
+                <option>Seleccionar...</option>
+                <option>2025-1</option>
+                <option>2025-2</option>
+              </select>
+            </div>
+          </div>
+          <p class="muted" style="margin:0">Estados de validación: bordes azules al foco; errores se comunican con banner/inline.</p>
+        </div>
+      </section>
+
+      <!-- Tabla -->
+      <section class="card">
+        <div class="card-header">Tabla de datos</div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Módulo</th><th>Resultado</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>06/11/2025</td><td>Prof. López</td><td>Registró calificación</td><td>Calificaciones</td><td><span class="badge ok">✓ Éxito</span></td></tr>
+              <tr><td>06/11/2025</td><td>Admin</td><td>Modificó permiso</td><td>Roles</td><td><span class="badge fail">✗ Denegado</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Modal de ejemplo -->
+    <section class="card" style="margin-top:var(--space-8)">
+      <div class="card-header">Patrón de notificación / modal</div>
+      <div class="card-body">
+        <div class="modal">
+          <div class="title">Guardado</div>
+          <div class="content">
+            <div class="notice"><strong>Calificación guardada correctamente.</strong> Esta notificación se cierra sola o al presionar Aceptar.</div>
+          </div>
+          <div class="actions">
+            <button class="btn">Cancelar</button>
+            <button class="btn primary">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
