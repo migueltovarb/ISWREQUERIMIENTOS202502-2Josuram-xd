@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Asignar Estudiantes • SGEN</title>
+<style>
+:root{--brand-blue:#1565C0;--bg:#fff;--border:#DADCE0;--radius-xl:1rem}
+*{box-sizing:border-box}body{font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Arial;background:#f4f6fa;margin:0;padding:2rem}
+.container{max-width:1100px;margin:0 auto;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.5rem}
+.header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+.form-grid{display:grid;grid-template-columns:1fr 2fr;gap:1rem}
+.card{background:#fff;border:1px solid var(--border);padding:1rem;border-radius:.75rem}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{background:#f9fafb;padding:.5rem;text-align:left}
+.tbl td{padding:.5rem;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Asignar Estudiantes a Grupo</h1>
+    <a href="{% url 'admin_dashboard' %}" style="margin-left:auto">Volver</a>
+  </div>
+
+  <div class="form-grid">
+    <div class="card">
+      <h3>Seleccionar Grupo</h3>
+      <ul>
+        {% for g in grupos %}
+          <li><a href="?grupo={{ g.id }}">{{ g.nombre }} — {{ g.periodo.nombre }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="card">
+      {% if grupo %}
+        <h3>Estudiantes (Grupo: {{ grupo.nombre }} — {{ grupo.periodo.nombre }})</h3>
+        <form method="post">
+          {% csrf_token %}
+          <table class="tbl">
+            <thead><tr><th>Seleccionar</th><th>Nombre</th><th>Documento</th></tr></thead>
+            <tbody>
+              {% for e in estudiantes %}
+              <tr>
+                <td><input type="checkbox" name="estudiantes" value="{{ e.id_usuario }}" {% if e.id_usuario in inscritos %}checked{% endif %}></td>
+                <td>{{ e.first_name|default:e.username }}</td>
+                <td>{{ e.documento }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <div style="margin-top:1rem"><button type="submit">Guardar asignaciones</button></div>
+        </form>
+      {% else %}
+        <p>Selecciona un grupo a la izquierda para ver y asignar estudiantes.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+</body>
+</html>
