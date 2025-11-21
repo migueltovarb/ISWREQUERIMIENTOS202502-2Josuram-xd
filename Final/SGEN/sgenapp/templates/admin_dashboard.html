@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Panel Admin • SGEN</title>
+<style>
+  :root{
+    --brand-blue: #1565C0;
+    --brand-red: #D32F2F;
+    --success: #2E7D32;
+    --bg:#FFFFFF;
+    --text:#111111;
+    --muted:#6B7280;
+    --border:#DADCE0;
+    --shadow:0 8px 24px rgba(16,24,40,.08);
+    --font-sans:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
+    --space-4:1rem;
+    --space-6:1.5rem;
+    --space-8:2rem;
+    --radius-xl:1.25rem;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%; margin:0}
+  body{font-family:var(--font-sans); font-size:15px; color:var(--text); background:linear-gradient(180deg,#fafafb, #f4f6fa 60%, #eef2f7)}
+  .container{max-width:1200px; margin:0 auto; padding:var(--space-8)}
+  .header{display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-8)}
+  .header h1{margin:0}
+  .btn{appearance:none; border:1px solid var(--border); background:#e5e7eb; color:var(--text); padding:.625rem 1rem; border-radius:999px; font-weight:600; cursor:pointer; transition:.15s}
+  .btn.primary{background:var(--brand-blue); color:#fff; border:none}
+  .btn.primary:hover{background:#0D47A1}
+  .btn.danger{background:var(--brand-red); color:#fff; border:none}
+  .card{background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-xl); box-shadow:var(--shadow); padding:var(--space-6); margin-bottom:var(--space-6)}
+  .card h2{margin:0 0 var(--space-4)}
+  .nav{background:var(--bg); border-bottom:1px solid var(--border); padding:var(--space-4); margin-bottom:var(--space-8); display:flex; gap:var(--space-4)}
+  .nav a{text-decoration:none; color:var(--brand-blue); font-weight:600; padding:.5rem 1rem}
+  .nav a:hover{background:var(--border); border-radius:.5rem}
+  .stats{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:var(--space-4); margin-bottom:var(--space-6)}
+  .stat-box{background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-xl); padding:var(--space-6); text-align:center}
+  .stat-box .number{font-size:32px; font-weight:700; color:var(--brand-blue)}
+  .stat-box .label{color:var(--muted); font-size:14px; margin-top:.5rem}
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Panel de Administrador</h1>
+      <form method="POST" action="{% url 'logout' %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" class="btn danger">Cerrar sesión</button>
+      </form>
+    </div>
+
+    <div class="nav">
+      <a href="{% url 'admin_usuarios' %}">Gestionar Usuarios</a>
+      <a href="{% url 'admin_periodos' %}">Periodos</a>
+      <a href="{% url 'admin_grupos' %}">Grupos</a>
+      <a href="{% url 'admin_materias' %}">Materias</a>
+      <a href="{% url 'admin_asignar_estudiantes' %}">Asignar Estudiantes</a>
+      <a href="{% url 'admin_asignar_profesor' %}">Asignar Profesor</a>
+      <a href="{% url 'admin_historial' %}">Historial</a>
+      <a href="{% url 'admin_reportes' %}">Reportes</a>
+      <a href="{% url 'admin_dashboard' %}">Inicio</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat-box">
+        <div class="number">{{ total_usuarios }}</div>
+        <div class="label">Usuarios Totales</div>
+      </div>
+      <div class="stat-box">
+        <div class="number">{{ total_profesores }}</div>
+        <div class="label">Profesores</div>
+      </div>
+      <div class="stat-box">
+        <div class="number">{{ total_estudiantes }}</div>
+        <div class="label">Estudiantes</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Bienvenido, {{ user.first_name|default:user.username }}</h2>
+      <p>Panel de administración del sistema SGEN.</p>
+    </div>
+  </div>
+</body>
+</html>
