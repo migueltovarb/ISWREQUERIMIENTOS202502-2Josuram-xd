@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gestionar Usuarios • SGEN</title>
+<style>
+
+  :root{
+    --brand-blue: #1565C0;
+    --brand-red: #D32F2F;
+    --success: #2E7D32;
+    --warning: #ED6C02;
+    --bg:#FFFFFF;
+    --text:#111111;
+    --muted:#6B7280;
+    --border:#DADCE0;
+    --shadow:0 8px 24px rgba(16,24,40,.08);
+    --font-sans:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
+    --space-2:.5rem;
+    --space-3:.75rem;
+    --space-4:1rem;
+    --space-6:1.5rem;
+    --space-8:2rem;
+    --radius-sm:.5rem;
+    --radius-xl:1.25rem;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%; margin:0}
+  body{font-family:var(--font-sans); font-size:15px; color:var(--text); background:linear-gradient(180deg,#fafafb, #f4f6fa 60%, #eef2f7)}
+  .container{max-width:1200px; margin:0 auto; padding:var(--space-8)}
+  .header{display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-8)}
+  .header h1{margin:0}
+  .header-small{display:flex; gap:var(--space-4)}
+  .btn{appearance:none; border:1px solid var(--border); background:#e5e7eb; color:var(--text); padding:.5rem .75rem; border-radius:6px; font-weight:600; cursor:pointer; font-size:14px; transition:.15s}
+  .btn.primary{background:var(--brand-blue); color:#fff; border:none}
+  .btn.primary:hover{background:#0D47A1}
+  .btn.danger{background:var(--brand-red); color:#fff; border:none}
+  .btn.danger:hover{background:#B71C1C}
+  .btn.success{background:var(--success); color:#fff; border:none}
+  .card{background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-xl); box-shadow:var(--shadow); padding:var(--space-6); margin-bottom:var(--space-6)}
+  .card h2{margin:0 0 var(--space-4)}
+  .nav{background:var(--bg); border-bottom:1px solid var(--border); padding:var(--space-4); margin-bottom:var(--space-8); display:flex; gap:var(--space-4); flex-wrap:wrap}
+  .nav a{text-decoration:none; color:var(--brand-blue); font-weight:600; padding:.5rem 1rem; border-radius:.5rem}
+  .nav a:hover{background:var(--border)}
+  .table{width:100%; border-collapse:separate; border-spacing:0; border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden}
+  .table th, .table td{padding:.75rem; border-bottom:1px solid var(--border); text-align:left}
+  .table thead th{background:#F7F7F9; font-weight:700}
+  .table tr:last-child td{border-bottom:none}
+  .form-group{margin-bottom:var(--space-4)}
+  .form-group label{display:block; font-weight:600; margin-bottom:.25rem}
+  .form-group input, .form-group select, .form-group textarea{width:100%; padding:.5rem; border:1px solid var(--border); border-radius:.5rem; font-family:var(--font-sans); font-size:15px}
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus{outline:none; box-shadow:0 0 0 3px rgba(21,101,192,.18); border-color:var(--brand-blue)}
+  .message{padding:var(--space-3) var(--space-4); border-radius:.5rem; margin-bottom:var(--space-4); border-left:4px solid}
+  .message.success{background:rgba(46,125,50,.06); border-color:var(--success); color:var(--success)}
+  .message.error{background:rgba(198,40,40,.06); border-color:var(--brand-red); color:var(--brand-red)}
+  .message.warning{background:rgba(237,108,2,.06); border-color:var(--warning); color:var(--warning)}
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Gestionar Usuarios</h1>
+      <form method="POST" action="{% url 'logout' %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" class="btn danger">Cerrar sesión</button>
+      </form>
+    </div>
+
+    <div class="nav">
+      <a href="{% url 'admin_usuarios' %}">Usuarios</a>
+      <a href="{% url 'admin_reportes' %}">Reportes</a>
+      <a href="{% url 'admin_dashboard' %}">Inicio</a>
+    </div>
+
+    <div class="card">
+      <h1>Usuarios del Sistema</h1>
+      <a href="{% url 'admin_crear_usuario' %}" class="btn primary">+ Crear Usuario</a>
+    </div>
+
+    <div class="card">
+      <h2>Administradores</h2>
+      {% if admins %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Documento</th>
+              <th>Correo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for admin in admins %}
+            <tr>
+              <td>{{ admin.first_name }}</td>
+              <td>{{ admin.documento }}</td>
+              <td>{{ admin.email }}</td>
+              <td style="display:flex; gap:.5rem">
+                <a href="{% url 'admin_editar_usuario' admin.id_usuario %}" class="btn primary">Editar</a>
+                <a href="{% url 'admin_eliminar_usuario' admin.id_usuario %}" class="btn danger" onclick="return confirm('¿Estás seguro?')">Eliminar</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No hay administradores registrados</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h2>Profesores</h2>
+      {% if profesores %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Documento</th>
+              <th>Correo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for profesor in profesores %}
+            <tr>
+              <td>{{ profesor.first_name }}</td>
+              <td>{{ profesor.documento }}</td>
+              <td>{{ profesor.email }}</td>
+              <td style="display:flex; gap:.5rem">
+                <a href="{% url 'admin_editar_usuario' profesor.id_usuario %}" class="btn primary">Editar</a>
+                <a href="{% url 'admin_eliminar_usuario' profesor.id_usuario %}" class="btn danger" onclick="return confirm('¿Estás seguro?')">Eliminar</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No hay profesores registrados</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h2>Estudiantes</h2>
+      {% if estudiantes %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Documento</th>
+              <th>Correo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for estudiante in estudiantes %}
+            <tr>
+              <td>{{ estudiante.first_name }}</td>
+              <td>{{ estudiante.documento }}</td>
+              <td>{{ estudiante.email }}</td>
+              <td style="display:flex; gap:.5rem">
+                <a href="{% url 'admin_editar_usuario' estudiante.id_usuario %}" class="btn primary">Editar</a>
+                <a href="{% url 'admin_eliminar_usuario' estudiante.id_usuario %}" class="btn danger" onclick="return confirm('¿Estás seguro?')">Eliminar</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No hay estudiantes registrados</p>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

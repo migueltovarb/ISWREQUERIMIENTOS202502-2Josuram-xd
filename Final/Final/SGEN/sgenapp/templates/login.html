@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Inicio de sesión • SGEN</title>
+<style>
+/* =========================
+    FUNDAMENTOS / TOKENS
+==========================*/
+:root{
+    /* Colores base */
+    --brand-red: #D32F2F;
+    --brand-blue: #1565C0;
+    --brand-blue-700:#0D47A1;
+    --brand-red-700:#B71C1C;
+
+    --success: #2E7D32;
+    --warning: #ED6C02;
+    --error:   #C62828;
+    --info:    #0277BD;
+
+    --bg:      #FFFFFF;
+    --bg-alt:  #F7F7F9;
+    --panel:   #FFFFFF;
+    --text:    #111111;
+    --muted:   #6B7280;
+    --border:  #DADCE0;
+    --shadow:  0 8px 24px rgba(16,24,40,.08);
+
+    --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    --h1: clamp(24px, 3.2vw, 36px);
+    --h2: clamp(20px, 2.6vw, 28px);
+    --lead: 17px;
+    --base: 15px;
+    --small: 13px;
+
+    --space-1: .25rem;
+    --space-2: .5rem;
+    --space-3: .75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --radius-sm: .5rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --ring: 0 0 0 3px rgba(21,101,192,.18);
+}
+
+  *{box-sizing:border-box}
+html,body{height:100%; margin:0}
+body{
+    font-family:var(--font-sans);
+    font-size:var(--base);
+    color:var(--text);
+    background:linear-gradient(180deg,#fafafb, #f4f6fa 60%, #eef2f7);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:var(--space-4);
+}
+
+.login-container{
+    width:100%;
+    max-width:420px;
+}
+
+.login-card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius-xl);
+    box-shadow:var(--shadow);
+    padding:var(--space-8);
+}
+
+.logo-section{
+    text-align:center;
+    margin-bottom:var(--space-8);
+}
+
+.logo-section h1{
+    font-size:var(--h2);
+    margin:0 0 var(--space-2);
+    color:var(--brand-blue);
+}
+
+.logo-section p{
+    font-size:var(--small);
+    color:var(--muted);
+    margin:0;
+}
+
+.form-group{
+    display:grid;
+    gap:.35rem;
+    margin-bottom:var(--space-4);
+}
+
+.label{
+    font-weight:600;
+    font-size:var(--base);
+    color:var(--text);
+}
+
+.input{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:.625rem .8rem;
+    background:#fff;
+    color:var(--text);
+    font-family:var(--font-sans);
+    font-size:var(--base);
+    transition:.15s ease-in-out;
+}
+
+.input:focus{
+    outline:none;
+    box-shadow:var(--ring);
+    border-color:var(--brand-blue);
+}
+
+.input::placeholder{
+    color:#BDBDBD;
+}
+
+.btn{
+    appearance:none;
+    border:1px solid var(--border);
+    background:#e5e7eb;
+    color:var(--text);
+    padding:.625rem 1rem;
+    border-radius:999px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.15s ease-in-out;
+    line-height:1;
+    user-select:none;
+    width:100%;
+    font-size:var(--base);
+    font-family:var(--font-sans);
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn:active{
+    transform:translateY(0);
+}
+
+.btn:focus-visible{
+    outline:none;
+    box-shadow:var(--ring);
+}
+
+.btn.primary{
+    background:var(--brand-blue);
+    color:#fff;
+    border:none;
+}
+
+.btn.primary:hover{
+    background:var(--brand-blue-700);
+}
+
+.message{
+    padding:var(--space-3) var(--space-4);
+    border-radius:var(--radius-sm);
+    margin-bottom:var(--space-4);
+    font-size:var(--small);
+    border-left:4px solid;
+}
+
+.message.success{
+    background:rgba(46,125,50,.06);
+    border-color:var(--success);
+    color:var(--success);
+}
+
+.message.error{
+    background:rgba(198,40,40,.06);
+    border-color:var(--error);
+    color:var(--error);
+}
+
+.footer-text{
+    text-align:center;
+    font-size:var(--small);
+    color:var(--muted);
+    margin-top:var(--space-6);
+}
+
+.footer-text a{
+    color:var(--brand-blue);
+    text-decoration:none;
+    font-weight:600;
+}
+
+.footer-text a:hover{
+    text-decoration:underline;
+}
+
+.checkbox-group{
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    margin-bottom:var(--space-4);
+    font-size:var(--small);
+}
+
+.checkbox-group input[type="checkbox"]{
+    width:18px;
+    height:18px;
+    cursor:pointer;
+    accent-color:var(--brand-blue);
+}
+
+.checkbox-group label{
+    cursor:pointer;
+    margin:0;
+}
+
+.password-field{
+    position:relative;
+}
+
+.password-toggle{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:var(--muted);
+    font-size:18px;
+    padding:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.password-toggle:hover{
+    color:var(--brand-blue);
+}
+</style>
+</head>
+<body>
+<div class="login-container">
+    <div class="login-card">
+    <div class="logo-section">
+        <h1>SGEN</h1>
+        <p>Sistema de Gestión Educativa</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+        <label class="label" for="username">Usuario o Email</label>
+        <input
+            type="text"
+            id="username"
+            name="username"
+            class="input"
+            placeholder="Ingrese su usuario o email"
+            required
+            autofocus
+        />
+        </div>
+
+        <div class="form-group">
+        <label class="label" for="password">Contraseña</label>
+        <div class="password-field">
+          <input
+              type="password"
+              id="password"
+              name="password"
+              class="input"
+              placeholder="Ingrese su contraseña"
+              required
+          />
+          <button type="button" class="password-toggle" onclick="togglePassword()">Ver</button>
+        </div>
+        </div>
+
+        <div class="checkbox-group">
+        <input type="checkbox" id="remember" name="remember" />
+        <label for="remember">Recuérdame en este dispositivo</label>
+        </div>
+
+        <button type="submit" class="btn primary">Iniciar sesión</button>
+    </form>
+
+    <!-- Recuperar contraseña deshabilitado temporalmente -->
+
+    <div class="footer-text">
+        <small>2025 SGEN. Todos los derechos reservados.</small>
+    </div>
+    </div>
+  </div>
+  
+  <script>
+    function togglePassword(){
+      const field = document.getElementById('password');
+      const type = field.getAttribute('type') === 'password' ? 'text' : 'password';
+      field.setAttribute('type', type);
+    }
+  </script>
+</body>
+</html>

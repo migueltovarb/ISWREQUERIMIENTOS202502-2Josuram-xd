@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Asignar Estudiantes • SGEN</title>
+<style>
+:root{--brand-blue:#1565C0;--brand-red:#D32F2F;--success:#2E7D32;--bg:#fff;--border:#DADCE0;--muted:#6B7280;--radius-xl:1rem}
+*{box-sizing:border-box}
+body{font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Arial;background:#f4f6fa;margin:0;padding:2rem}
+.container{max-width:1000px;margin:0 auto;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.5rem}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.btn{padding:.6rem 1rem;border:none;border-radius:.5rem;cursor:pointer;font-weight:600}
+.btn-primary{background:var(--brand-blue);color:#fff}
+.btn-primary:hover{background:#0D47A1}
+.btn-secondary{background:var(--border);color:var(--muted)}
+.btn-secondary:hover{background:#e5e7eb}
+.form-group{margin-bottom:1rem}
+label{display:block;margin-bottom:.5rem;font-weight:600}
+select{width:100%;padding:.75rem;border:1px solid var(--border);border-radius:.5rem;font-size:1rem}
+.list{list-style:none;padding:0;margin:0}
+.list-item{padding:.75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem}
+.list-item:last-child{border-bottom:none}
+.list-item input[type="checkbox"]{width:1.25rem;height:1.25rem;cursor:pointer}
+.materia-grupo{background:#f9fafb;padding:1rem;border-radius:.5rem;margin-bottom:1.5rem}
+.materia-grupo h3{margin:0 0 1rem;color:var(--brand-blue)}
+.estudiantes-section{max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:.5rem;padding:1rem;margin-bottom:1rem}
+.buttons{display:flex;gap:1rem;margin-top:1.5rem}
+.message{padding:.75rem;border-radius:.5rem;margin-bottom:1rem}
+.message.success{background:#efe;color:#3c3}
+.message.error{background:#fee;color:#c33}
+.link{color:var(--brand-blue);text-decoration:none}
+.link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Asignar Estudiantes a Materia</h1>
+    <a href="{% url 'profesor_dashboard' %}" class="link">Volver al Dashboard</a>
+  </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="message {% if message.tags == 'error' %}error{% else %}success{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  {% if materia_grupo %}
+    <div class="materia-grupo">
+      <h3>{{ materia_grupo.materia.codigo }} - {{ materia_grupo.materia.nombre }}</h3>
+      <p><strong>Grupo:</strong> {{ materia_grupo.grupo.nombre }} ({{ materia_grupo.grupo.periodo.nombre }})</p>
+      
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Estudiantes Disponibles ({{ estudiantes|length }})</label>
+          <div class="estudiantes-section">
+            <ul class="list">
+              {% if estudiantes %}
+                {% for est in estudiantes %}
+                  <li class="list-item">
+                    <input type="checkbox" name="estudiantes" value="{{ est.id_usuario }}" 
+                      {% if est.id_usuario in inscritos %}checked{% endif %} id="est_{{ est.id_usuario }}">
+                    <label for="est_{{ est.id_usuario }}" style="margin:0;flex:1;cursor:pointer">
+                      {{ est.first_name|default:est.username }} ({{ est.username }})
+                    </label>
+                  </li>
+                {% endfor %}
+              {% else %}
+                <li class="list-item">No hay estudiantes disponibles</li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+        <div class="buttons">
+          <button type="submit" class="btn btn-primary">Guardar Asignaciones</button>
+          <a href="{% url 'profesor_asignar_estudiantes' %}" class="btn btn-secondary">Limpiar Seleccion</a>
+        </div>
+      </form>
+    </div>
+  {% else %}
+    <div class="form-group">
+      <label for="materia_grupo_select">Selecciona una Materia:</label>
+      <form method="get" style="display:flex;gap:1rem">
+        <select id="materia_grupo_select" name="materia_grupo" style="flex:1">
+          <option value="">-- Seleccione una materia --</option>
+          {% for mg in materias_grupos %}
+            <option value="{{ mg.id }}">{{ mg.materia.codigo }} - {{ mg.materia.nombre }} ({{ mg.grupo.nombre }})</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Seleccionar</button>
+      </form>
+    </div>
+    <p style="color:var(--muted)">Selecciona una materia para empezar a asignar estudiantes.</p>
+  {% endif %}
+</div>
+</body>
+</html>
